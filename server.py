@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytz
 from flask import Flask
@@ -48,7 +48,9 @@ class MessageResource(Resource):
 
     get_messages_parser = reqparse.RequestParser()
     get_messages_parser.add_argument('username', type=str, required=False)
-    get_messages_parser.add_argument('start_time', type=inputs.datetime_from_iso8601, required=False)
+    get_messages_parser.add_argument('start_datetime', type=inputs.datetime_from_iso8601, required=False)
+    get_messages_parser.add_argument('start_time', type=lambda st: datetime.strptime(st, '%H:%M:%S').time(), required=False)
+    get_messages_parser.add_argument('time_span', type=inputs.positive, required=False)
 
     fields = {
         'username': fields.String(attribute='user.username'),
@@ -59,15 +61,23 @@ class MessageResource(Resource):
     def get(self):
         data = self.get_messages_parser.parse_args()
         username = data['username']
+        start_datetime = data['start_datetime']
         start_time = data['start_time']
+        time_span = data['time_span']
 
         messages = Message.query
 
         if username is not None:
             messages = messages.filter(User.username == username)
 
-        if start_time is not None:
+        if start_datetime is not None:
+            messages = messages.filter(Message.timestamp >= start_datetime)
+        elif start_time is not None:
+            timestamp = datetime.utcnow().replace(hour=start_time.hour, minute=start_time.minute, second=start_time.second, tzinfo=pytz.utc)
             messages = messages.filter(Message.timestamp >= start_time)
+        elif time_span is not None:
+            timestamp = datetime.utcnow().replace(tzinfo=pytz.utc) - timedelta(minutes=time_span)
+            messages = messages.filter(Message.timestamp >= timestamp)
 
         return marshal(messages.all(), self.fields, envelope='messages')
 
