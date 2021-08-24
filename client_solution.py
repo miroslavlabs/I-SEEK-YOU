@@ -8,29 +8,62 @@ server_endpoint = 'http://127.0.0.1:5000/api/v1/'
 
 # TASK 1
 def ask_username():
-    return ""
+    return input("Enter username: ")
 
 
 # TASK 2
 def ask_chat_action():
-    return -1
+    print("Select option:")
+    print("1. Send a message")
+    print("2. Get all messages")
+    print("3. Get messages by user")
+    print("4. Get messages after hour and minute")
+    print("5. Get messages cost by user")
+
+    option = input()
+    if option == '':
+        return None
+
+    option = int(option)
+    while option < 1 or option > 5:
+        print("Invalid option. Choose from 1 to 5...")
+        option = int(input())
+
+    return option
 
 
 # TASK 3
 def ask_send_message():
-    return ""
+    return input("Send message: ")
 
 
 # TASK 4
-# Use the method fetch_all_messages() to get all chat messages
-# Use the method print_message(message) to get print message to console
 def print_all_chat_messages():
-    print("Still missing...")
+    messages = fetch_all_messages()
+    if messages:
+        for message in messages:
+            print_message(message)
+    else:
+        print("No messages gave been sent yet...")
 
 
 # TASK 4
-def print_chat_messages_by_user(username):
-    print("Still missing...")
+def print_chat_messages_by_username():
+    username = input("Get messages by username: ")
+    messages = fetch_all_messages()
+    for message in messages:
+        if message['username'] == username:
+            print_message(message)
+
+
+# TASK 4
+def print_chat_messages_by_time():
+    time = input("Time: ")
+    messages = fetch_all_messages()
+
+    for message in messages:
+        if get_message_datetime(message) > create_datetime_from_time(time):
+            print_message(message)
 
 
 def chat(username):
@@ -40,13 +73,13 @@ def chat(username):
             send_message(username)
         elif action == 2:
             # TASK 4
-            print ("Still missing...")
+            print_all_chat_messages()
         elif action == 3:
             # TASK 4
-            print ("Still missing...")
+            print_chat_messages_by_username()
         elif action == 4:
             # TASK 4
-            print("Still missing...")
+            print_chat_messages_by_time()
         elif action == 5:
             get_total_cost(username)
         else:
@@ -79,6 +112,16 @@ def fetch_all_messages():
         messages = response.json()['messages']
 
     return messages
+
+
+def get_message_datetime(message):
+    return datetime.strptime(message['timestamp'], '%Y-%m-%dT%H:%M:%S.%f')
+
+
+def create_datetime_from_time(time):
+    hour = int(time[:2])
+    minute = int(time[3:])
+    return datetime.today().replace(hour=hour, minute=minute, second=0)
 
 
 def get_total_cost(username):
