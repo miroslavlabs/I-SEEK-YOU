@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import requests
-from questionary import Choice, Separator, text, select
 
 server_endpoint = 'http://127.0.0.1:5000/api/v1/'
 
