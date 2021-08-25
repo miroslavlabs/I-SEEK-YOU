@@ -44,7 +44,7 @@ def print_all_chat_messages():
         for message in messages:
             print_message(message)
     else:
-        print("No messages gave been sent yet...")
+        print("No messages have been sent yet...")
 
 
 # TASK 4

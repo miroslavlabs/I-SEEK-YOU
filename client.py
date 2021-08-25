@@ -33,6 +33,13 @@ def print_chat_messages_by_user(username):
     print("Still missing...")
 
 
+# TASK 4
+# Use get_message_datetime() to get the data and time for a message
+# Use create_datetime_from_time() to add the current data to the time that will be entered by the user
+def print_chat_messages_by_time():
+    print("Still missing...")
+
+
 def chat(username):
     while True:
         action = ask_chat_action()
@@ -79,6 +86,16 @@ def fetch_all_messages():
         messages = response.json()['messages']
 
     return messages
+
+
+def get_message_datetime(message):
+    return datetime.strptime(message['timestamp'], '%Y-%m-%dT%H:%M:%S.%f')
+
+
+def create_datetime_from_time(time):
+    hour = int(time[:2])
+    minute = int(time[3:])
+    return datetime.today().replace(hour=hour, minute=minute, second=0)
 
 
 def get_total_cost(username):
