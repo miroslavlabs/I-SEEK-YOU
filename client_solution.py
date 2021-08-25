@@ -131,18 +131,21 @@ def get_total_cost(username):
 
 
 def join_chat():
-    while True:
-        username = ask_username()
-        response = requests.post(server_endpoint + 'users/{username}'.format(username=username))
-        if response.status_code == 200:
-            return response
+    username = ask_username()
+    response = requests.post(server_endpoint + 'users/{username}'.format(username=username))
+    if response.status_code == 200:
+        return response
+    else:
+        print("Invalid username")
+        return None
 
 
 def main():
     response = join_chat()
-    username = response.json()['user']['username']
-    print('Hello, {username}'.format(username=username))
-    chat(username)
+    if response is not None:
+        username = response.json()['user']['username']
+        print('Hello, {username}'.format(username=username))
+        chat(username)
 
 
 if __name__ == '__main__':

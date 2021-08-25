@@ -8,7 +8,7 @@ server_endpoint = 'http://127.0.0.1:5000/api/v1/'
 
 # TASK 1
 def ask_username():
-    print("Still missing...")
+    print("Username still missing...")
     return ""
 
 
@@ -107,18 +107,21 @@ def get_total_cost(username):
 
 
 def join_chat():
-    while True:
-        username = ask_username()
-        response = requests.post(server_endpoint + 'users/{username}'.format(username=username))
-        if response.status_code == 200:
-            return response
+    username = ask_username()
+    response = requests.post(server_endpoint + 'users/{username}'.format(username=username))
+    if response.status_code == 200:
+        return response
+    else:
+        print("Invalid username")
+        return None
 
 
 def main():
     response = join_chat()
-    username = response.json()['user']['username']
-    print('Hello, {username}'.format(username=username))
-    chat(username)
+    if response is not None:
+        username = response.json()['user']['username']
+        print('Hello, {username}'.format(username=username))
+        chat(username)
 
 
 if __name__ == '__main__':
