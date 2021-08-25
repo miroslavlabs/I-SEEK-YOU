@@ -8,7 +8,7 @@ server_endpoint = 'http://127.0.0.1:5000/api/v1/'
 
 # TASK 1
 def ask_username():
-    return ""
+    print("Still missing...")
 
 
 # TASK 2
@@ -18,7 +18,7 @@ def ask_chat_action():
 
 # TASK 3
 def ask_send_message():
-    return ""
+    print("Still missing...")
 
 
 # TASK 4
