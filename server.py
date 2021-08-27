@@ -135,7 +135,7 @@ class Message(db.Model):
 
     def cost(self):
         spaces_count = self.message.count(' ')
-        return spaces_count * 10 + len(self.message) - spaces_count
+        return spaces_count * 9 + len(self.message)
 
 
 @app.route('/')
